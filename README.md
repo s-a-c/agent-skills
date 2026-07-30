@@ -40,7 +40,7 @@ See the [`skills` CLI docs](https://github.com/vercel-labs/skills) for global
 
 ## Always-on wrappers (gate skills)
 
-Gate skills (✓ above) ship a co-located `rules/<rule-name>.md` — a thin
+Gate skills (✓ above) ship a co-located `rules/<gate>.md` — a thin
 `alwaysApply: true` rule that fires every turn and routes to the skill for the
 gate body. The skill is the single source of the body; the wrapper only enforces
 always-on routing.
@@ -52,25 +52,26 @@ skills` installs opt-in skills, not always-on rules. Enforcement is opt-in:
 - **Enable:** copy the wrapper into your agent's always-on rules location and
   adapt the frontmatter — `~/.config/agents/rules/` (opencode),
   `.cursor/rules/*.mdc` (Cursor), `.clinerules/` (Cline). The wrapper's filename
-  is already the conventional rule name, so no rename is needed; each carries the
-  exact `cp`/`curl` one-liner.
+  matches the skill (`s-a-c-` prefixed, namespaced), so copy it as-is — no rename
+  needed, and it won't collide in a shared rules dir. Each carries the exact
+  `cp`/`curl` one-liner.
 - **Disable:** delete that copy. The skill stays installed as opt-in; only the
   always-on enforcement is removed.
 
 ```bash
 # enable the git-write gate for opencode (global) — path-stable fetch from GitHub
-# (works regardless of where the skill was installed; filename already matches the target)
-curl -fsSL https://raw.githubusercontent.com/s-a-c/agent-skills/main/skills/s-a-c-git-write-gate/rules/git-policy.md \
-  -o ~/.config/agents/rules/git-policy.md
+# (works regardless of where the skill was installed; filename matches the skill — no rename)
+curl -fsSL https://raw.githubusercontent.com/s-a-c/agent-skills/main/skills/s-a-c-git-write-gate/rules/s-a-c-git-write-gate.md \
+  -o ~/.config/agents/rules/s-a-c-git-write-gate.md
 # …or copy from the installed skill folder (path varies by agent/scope), e.g.
-cp ~/.agents/skills/s-a-c-git-write-gate/rules/git-policy.md ~/.config/agents/rules/git-policy.md
+cp ~/.agents/skills/s-a-c-git-write-gate/rules/s-a-c-git-write-gate.md ~/.config/agents/rules/s-a-c-git-write-gate.md
 ```
 
 ## Layout
 
 ```
 skills/<name>/SKILL.md            # every skill (name + description)
-skills/<gate>/rules/<rule>.md     # gate skills only: always-on rule wrapper
+skills/<gate>/rules/<gate>.md     # gate skills only: always-on rule wrapper
 ```
 
 This repo is a **portable export**: skills are generalized to be
