@@ -58,6 +58,28 @@ updated: 2026-07-23
 
 Do not hide document identity in a filename, page title, or CSS only. The metadata `title` must match the visible document title; `description`, `type`, `tags`, and `updated` must remain machine-readable in either format.
 
+### `type` vocabulary
+
+`type` is a closed set. Use exactly one of these values (established across `~/docs`):
+
+| `type` | Use for |
+| --- | --- |
+| `guide` | How-to / user guide (the default for most documents) |
+| `reference` | Reference material (APIs, configs, catalogs) |
+| `adr` | Architecture Decision Record |
+| `plan` | Implementation plan (superpowers) |
+| `spec` | Design spec (superpowers) |
+| `research` | Research / investigation output (superpowers) |
+| `index` | A section hub / landing index page |
+| `contents` | A structural folder-contents page (lists every child) |
+| `handoff` | A session/agent handoff document |
+
+`tags` is an open list; prefer an existing tag (`superpowers`, `desktop`, `memory`, `architecture`, `home`, `agents`, `understand-anything`, `documentation`, `caddy`, …) over minting a new one. `updated` is `YYYY-MM-DD`.
+
+### Frontmatter is mandatory for build health
+
+This is not just a convention — it is a **build requirement**. The home docs site (`infra/docs-site`, Astro + Starlight) symlinks `src/content/docs → ~/docs` and ingests **every** `.md` file as a Starlight content-collection entry. A Markdown file without valid YAML frontmatter (at minimum `title`) fails the collection schema and **breaks the entire site build** (`InvalidContentEntryDataError`), not just that one page. HTML files are served as static assets via `public/s-a-c/` and do not need frontmatter (they carry the equivalent comment block). So: **every committed `.md` under `~/docs` MUST carry the five-field frontmatter before it lands on `main`**, or the next docs-site rebuild fails. The same OKF/Starlight-compatible frontmatter keeps the docs portable across any frontmatter-aware static-site generator.
+
 ## 3. Document shape and navigation
 
 - Provide one document title: exactly one plain H1 in Markdown; exactly one visible H1 in HTML, plus the HTML `<title>` element. The visible titles must match the metadata `title`.
