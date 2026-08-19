@@ -54,6 +54,7 @@ For the `docs/` root, `P` is empty, so its required pages are `01-contents.md` a
 ## 2. Open Knowledge Format bundles
 
 - The path-derived prefix and navigation requirements above govern `docs/` and its descendants. An OKF bundle must live outside `docs/`; do not use OKF to waive this contract within that tree.
+- The in-`docs/` metadata contract defined by `s-a-c-doc-format-parity` is OKF-compatible: same `type` vocabulary (the OKF core types plus the structural types) and a `type`-first field order. The `docs/` tree and any OKF bundles therefore share one vocabulary; the bundle regime still applies only outside `docs/`.
 - A directory outside `docs/` opts into strict Google Cloud Open Knowledge Format (OKF) v0.1 when it contains a hidden `.okf-bundle` marker. The marker defines the bundle root and all descendants.
 - Every Markdown file in an opted-in bundle is an OKF concept document unless it is the reserved `index.md` or `log.md`. A concept document begins with parseable YAML frontmatter containing a non-empty `type` field, followed by a standard Markdown body.
 - `index.md` and `log.md` use their respective OKF reserved-file structures and must not be treated as concept documents. Other Markdown files, including README-style files, remain concept documents and require `type`.
