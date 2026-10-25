@@ -1,6 +1,14 @@
 ---
-name: s-a-c-doc-tree-prefixes
+title: Documentation Tree Prefixes
 description: Structure a docs/ tree with unique path-derived numeric prefixes and reserved contents/index navigation pages. Use when creating, updating, or migrating project documentation.
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+type: reference
+tags: [agents, documentation]
+created: 2026-08-09
+updated: 2026-10-25
+name: s-a-c-doc-tree-prefixes
 ---
 
 # Documentation Tree Prefixes
@@ -10,12 +18,14 @@ description: Structure a docs/ tree with unique path-derived numeric prefixes an
 ## 1. Required structure
 
 - Outside an opted-in OKF bundle, the Markdown body begins with a plain, unnumbered H1 title. Do not add an HTML anchor.
+- Every Markdown and HTML document begins with the shared front matter contract defined by `s-a-c-doc-format-parity`; HTML represents the same block as a comment immediately before `<!DOCTYPE html>`.
+- The front matter `title` equals the document's single source/visible H1. The Astro/Starlight renderer may filter the source H1 at render time, but source documents retain it for validation and non-Starlight consumers.
 - Use ATX headings only (`##`, `###`).
 - Number every heading below the H1 hierarchically. The first H2 begins at `1.`; each deeper level appends its own ordinal, for example `## 1. Section`, `### 1.1. Detail`, and `#### 1.1.1. Detail`.
 
 ### 1.1. Path-derived prefixes
 
-- The project's `docs/` root has no prefix. Every version-controlled, non-hidden file and folder beneath it must begin with a unique, path-derived numeric prefix. This includes Markdown files, images, diagrams, generated artifacts, vendor material, archives, and R&D content. A repository may exclude specific subdirectories of `docs/` by naming them in an explicit override (§6); excluded trees are invisible to the prefix, navigation, and migration rules.
+- The project's `docs/` root has no prefix. Every version-controlled, non-hidden file and folder beneath it must begin with a unique, path-derived numeric prefix. This includes Markdown files, images, diagrams, generated artifacts, vendor material, archives, and R&D content. A repository may exclude specific subdirectories of `docs/` from prefix migration and navigation by naming them in an explicit override (§6); those trees remain subject to the shared metadata, document identity, heading, link, and accessibility contract.
 - A root child starts with one two-digit tail from `01` through `99`. A descendant appends one new two-digit tail to its parent's complete prefix. Do not place separators between inherited tails; place one hyphen between the completed prefix and its descriptive slug.
 - Evaluate only the newly appended tail. A folder tail must be divisible by 3 or 5. A file tail must be divisible by neither 3 nor 5. Reserve `00`; do not use it for any entry.
 - Keep direct-sibling tails unique. The concatenated prefix is the entry's project-wide identifier and must never repeat.
@@ -47,13 +57,13 @@ For the `docs/` root, `P` is empty, so its required pages are `01-contents.md` a
 
 ### 1.3. Legacy migration and capacity
 
-- A legacy documentation subtree may remain unchanged. When a substantive content edit or a structural change adds, removes, renames, reorganizes, or materially revises an entry, migrate the smallest enclosing documentation folder and all of its descendants to this structure. Repair ancestor navigation links that point into the migrated subtree.
+- A legacy documentation subtree may retain its presentation style, but it still follows the shared metadata, identity, heading, link, and accessibility contract. When a substantive content edit or a structural change adds, removes, renames, reorganizes, or materially revises an entry, migrate the smallest enclosing documentation folder and all of its descendants to this structure. Repair ancestor navigation links that point into the migrated subtree.
 - An isolated typo or link repair does not trigger migration.
 - When a folder has no valid unused two-digit tail for a required child, introduce another documentation folder to split the branch. Do not widen tails or reuse a tail.
 
 ## 2. Open Knowledge Format bundles
 
-- The path-derived prefix and navigation requirements above govern `docs/` and its descendants. An OKF bundle must live outside `docs/`; do not use OKF to waive this contract within that tree.
+- The path-derived prefix and navigation requirements above govern `docs/` and its descendants. An OKF bundle must live outside `docs/`; do not use OKF to waive the shared metadata or document identity contract within that tree.
 - The in-`docs/` metadata contract defined by `s-a-c-doc-format-parity` is OKF-compatible: same `type` vocabulary (the OKF core types plus the structural types) and a `type`-first field order. The `docs/` tree and any OKF bundles therefore share one vocabulary; the bundle regime still applies only outside `docs/`.
 - A directory outside `docs/` opts into strict Google Cloud Open Knowledge Format (OKF) v0.1 when it contains a hidden `.okf-bundle` marker. The marker defines the bundle root and all descendants.
 - Every Markdown file in an opted-in bundle is an OKF concept document unless it is the reserved `index.md` or `log.md`. A concept document begins with parseable YAML frontmatter containing a non-empty `type` field, followed by a standard Markdown body.
@@ -85,12 +95,12 @@ For the `docs/` root, `P` is empty, so its required pages are `01-contents.md` a
 All diagrams, images, and rendered visuals must meet WCAG 2.1 AA:
 
 - Provide sufficient contrast, avoid color-only meaning, and add alt text or text summaries for every visual.
-- Every Mermaid block begins with YAML frontmatter that selects the configurable `base` theme and sets `themeVariables.fontSize` to `16px`; this establishes a minimum rendered label size. Set node `fill`, `stroke`, and text `color` to high-contrast values. Keep diagrams focused; split large diagrams instead of shrinking labels.
+- Every Mermaid block begins with YAML frontmatter using the shared `redux-dark-color` theme and `themeVariables.fontSize: 16px`; this establishes a portable minimum rendered label size. Extend the shared palette with diagram-specific colors and keep node `fill`, `stroke`, and text `color` at high contrast. Keep diagrams focused; split large diagrams instead of shrinking labels.
 
   ```mermaid
   ---
   config:
-    theme: base
+    theme: redux-dark-color
     themeVariables:
       fontSize: 16px
   ---
@@ -111,7 +121,17 @@ When fixing a broken link, create or correct the missing content when possible. 
 
 ## 6. Overrides
 
-Repository-specific rules may override only default presentation choices and renderer-specific link conventions when they are explicit and discoverable. They may not waive the required prefix grammar, reserved navigation pages, tracked-entry coverage, legacy migration rules, or opted-in OKF requirements.
+Repository-specific rules may override only default presentation choices and renderer-specific link conventions when they are explicit and discoverable. They may not waive the required prefix grammar, reserved navigation pages, tracked-entry coverage, legacy migration rules, or opted-in OKF requirements — except for the structural exemptions in §6.1.
+
+### 6.1. Structural exemptions
+
+A repository may declare explicit, documented structural exemptions for directories whose purpose is not narrative documentation. Name each exempted directory in the repository's AGENTS.md or a documentation override file. The exemption is local to the named directory and its descendants; it does not propagate to siblings.
+
+| Category | Exempt from | Still requires |
+|---|---|---|
+| **Asset directories** (diagrams, images, media — e.g. `assets/`) | all documentation-structure rules (prefixes, navigation, document shape, heading numbering, frontmatter) | Mermaid `.mmd` sources still follow §4 visual rules (frontmatter, theme, contrast) |
+| **Agent working directories** (agent configs, skills, triage, handoffs — e.g. `agents/`) | prefix grammar, reserved navigation pages, document shape | YAML frontmatter contract (§2 of `s-a-c-doc-format-parity`) and heading numbering (`N.` / `N.M.`) |
+| **R&D Archive directories** (specs, plans, research — e.g. `superpowers/`) | prefix grammar | unnumbered `contents.md`/`index.md` navigation, YAML frontmatter contract, and heading numbering |
 
 ## See Also
 

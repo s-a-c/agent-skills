@@ -1,6 +1,14 @@
 ---
-name: s-a-c-doc-format-parity
+title: Shared Documentation Formats
 description: Keep Markdown and HTML documentation in parity — same metadata, structure, navigation, links, assets, and accessibility. Use when creating or updating any documentation .md or .html document.
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+type: reference
+tags: [agents, documentation]
+created: 2026-08-09
+updated: 2026-10-25
+name: s-a-c-doc-format-parity
 ---
 
 # Shared Documentation Formats
@@ -8,19 +16,24 @@ description: Keep Markdown and HTML documentation in parity — same metadata, s
 > **Core rule:** Treat `.md` and `.html` as two renderings of the same documentation contract. Keep identity, structure, navigation, links, assets, and accessibility equivalent.
 
 <details>
-  <summary>Table of Contents</summary>
+  <summary style="font-size: 1.25em; font-weight: bold; margin: 0.83em 0; cursor: pointer;">
+    Expand for Table of Contents
+  </summary>
 
 - [1. Scope and format parity](#1-scope-and-format-parity)
 - [2. Metadata contract](#2-metadata-contract)
-  - [`type` vocabulary](#type-vocabulary)
-  - [Frontmatter is mandatory for build health](#frontmatter-is-mandatory-for-build-health)
+  - [2.1. `type` vocabulary](#21-type-vocabulary)
+  - [2.2. Frontmatter is mandatory for build health](#22-frontmatter-is-mandatory-for-build-health)
 - [3. Document shape and navigation](#3-document-shape-and-navigation)
 - [4. Paths, assets, links, and IDs](#4-paths-assets-links-and-ids)
 - [5. Accessibility and visual content](#5-accessibility-and-visual-content)
-- [6. Narrow legacy and R&D overrides](#6-narrow-legacy-and-rd-overrides)
+- [6. Narrow legacy and R\&D overrides](#6-narrow-legacy-and-rd-overrides)
 - [7. Actionable examples](#7-actionable-examples)
+- [8. See Also](#8-see-also)
 
 </details>
+
+---
 
 ## 1. Scope and format parity
 
@@ -34,26 +47,27 @@ Every covered document carries this YAML front matter block, in this exact order
 
 ```yaml
 ---
-type: <closed vocabulary value>      # required
-title: <display name>                # required; equals the visible title / source H1
-description: <one-line summary>      # required; feeds index pages and query previews
-tags: [<tag>, ...]                   # required; may be an empty list
-timestamp: YYYY-MM-DD                # required; last-modified, ISO 8601 date
-provenance: agent|human|mixed        # required; who authored the document
+type: <closed vocabulary value>        # required
+title: <display name>                  # required; equals the visible title / source H1
+description: <one-line summary>        # required; feeds index.md pages and query previews
+tags: [<tag>, ...]                     # required; may be an empty list
+timestamp: YYYY-MM-DD                  # required; last-modified, ISO 8601 date
+provenance: agent|human|mixed          # required; who authored the document
 status: draft|stable|stale|deprecated  # required; lifecycle state
-related: [docs/<id>, wiki/<id>, ...] # optional; portable edge set
-resource: <URI>                      # optional; canonical asset URI
+related: [docs/<id>, wiki/<id>, ...]   # optional; portable edge set
+resource: <URI>                        # optional; canonical asset URI
 ---
 ```
 
-- **Markdown (`.md`):** Put YAML frontmatter before the body and before the H1.
-- **HTML (`.html`):** Put an equivalent comment block immediately before `<!DOCTYPE html>`, with no bytes or markup between the comment and doctype; same fields, same order.
-- `timestamp` records the last-modified date. Original-creation dates live in version-control history; the contract does not carry them.
+- `timestamp` records the last-modified date; it replaces the former `created`/`updated` pair. Original-creation dates live in git history; the contract does not carry them.
 - `provenance` states authorship: generator-assisted documents default to `agent`, hand-written ones to `human`, co-edited ones to `mixed`.
 - `status` tracks the lifecycle: `draft` while forming, `stable` when trustworthy, `stale` when known-drifted, `deprecated` when retired without deletion.
-- `related` edges reference the repository's stable document identifier under one of two namespaces: `docs/<id>` for edges inside the repository's own `docs/` tree, `wiki/<id>` for portable edges to OKF concepts outside it. In a prefix-numbered tree (see `s-a-c-doc-tree-prefixes`), `<id>` is the path-derived numeric prefix.
+- `related` edges reference the workspace's stable document identifier under one of two namespaces: `docs/<id>` for edges inside `~/docs`, `wiki/<id>` for portable edges to OKF concepts outside it. `<id>` is the path-derived numeric prefix (see `s-a-c-doc-tree-prefixes` §1.1).
 - `resource` names the canonical URI of the primary asset an `entity` or `reference` document describes; omit it elsewhere.
-- Renderer-specific keys (for example a `tableOfContents` heading range) are not part of the shared contract. A file carries one only when it deviates from the renderer's default, and repositories may allowlist such keys explicitly.
+- `tableOfContents` is no longer part of the shared contract. The docs-site schema keeps it optional with its `{minHeadingLevel: 2, maxHeadingLevel: 3}` default; a file carries it only when deviating from that default. Other renderer-specific keys require an explicit allowlist.
+
+- **Markdown (`.md`):** Put YAML frontmatter before the body and before the H1.
+- **HTML (`.html`):** Put an equivalent comment block immediately before `<!DOCTYPE html>`, with no bytes or markup between the comment and doctype; same fields, same order.
 
 ```md
 ---
@@ -84,34 +98,34 @@ status: stable
 
 Do not hide document identity in a filename, page title, or CSS only. The metadata `title` must match the visible document title and the single source Markdown H1; all required metadata must remain machine-readable in either format.
 
-### `type` vocabulary
+### 2.1. `type` vocabulary
 
-`type` is a closed set: the OKF core types plus the structural navigation types and `handoff`. Use exactly one of these values:
+`type` is a closed set: the OKF core types plus the structural navigation types and `handoff` (established across `~/docs`):
 
-| `type` | Use for |
-| --- | --- |
-| `concept` | Explanatory knowledge document (OKF core type) |
-| `playbook` | How-to / user guide / operational runbook |
-| `reference` | Reference material (APIs, configs, catalogs) |
-| `entity` | A thing with identity in the domain (pairs with `resource`) |
-| `decision` | Decision record (architecture decisions, was `adr`) |
-| `spec` | Design spec |
-| `plan` | Implementation plan |
-| `research` | Research / investigation output |
-| `report` | Presented findings; historical records such as adopted proposals |
-| `index` | A section hub / landing index page (structural) |
-| `contents` | A structural folder-contents page (lists every child) |
-| `handoff` | A session/agent handoff document |
+| `type`      | Use for                                               |
+| ----------- | ----------------------------------------------------- |
+| `concept`   | Explanatory knowledge document (OKF core type)        |
+| `playbook`  | How-to / user guide / operational runbook             |
+| `reference` | Reference material (APIs, configs, catalogs)          |
+| `entity`    | A thing with identity in the domain (pairs with `resource`) |
+| `decision`  | Decision record (architecture decisions, was `adr`)   |
+| `spec`      | Design spec                                           |
+| `plan`      | Implementation plan                                   |
+| `research`  | Research / investigation output                       |
+| `report`    | Presented findings; historical records such as adopted proposals |
+| `index`     | A section hub / landing index page (structural)       |
+| `contents`  | A structural folder-contents page (lists every child) |
+| `handoff`   | A session/agent handoff document                      |
 
-Legacy values map mechanically: `guide` → `playbook`, `adr` → `decision`, `runbook` → `playbook`, `proposal` → `report`; `overview` is retired. `tags` is an open list; prefer an existing tag over minting a new one.
+Legacy values map mechanically: `guide` → `playbook`, `adr` → `decision`, `runbook` → `playbook`, `proposal` → `report`; `overview` is retired. `tags` is an open list; prefer an existing tag (`superpowers`, `desktop`, `memory`, `architecture`, `home`, `agents`, `understand-anything`, `documentation`, `caddy`, …) over minting a new one.
 
-### Frontmatter is mandatory for build health
+### 2.2. Frontmatter is mandatory for build health
 
-This is not just a convention — it is a **build requirement**. A frontmatter-aware static-site generator (for example Astro + Starlight content collections) can ingest **every** `.md` file of a documentation tree as a content-collection entry. A Markdown file without valid YAML frontmatter (at minimum `title`) fails the collection schema and **breaks the entire site build** (`InvalidContentEntryDataError`), not just that one page. HTML files are typically served as static assets and do not need frontmatter (they carry the equivalent comment block). So: **every committed `.md` in such a tree MUST carry the required front matter fields before it lands on the default branch**, or the next site rebuild fails. The OKF-compatible frontmatter keeps documents portable across any frontmatter-aware static-site generator.
+This is not just a convention — it is a **build requirement**. The home docs site (`infra/docs-site`, Astro + Starlight) symlinks `src/content/docs → ~/docs` and ingests every `.md` file as a Starlight content-collection entry. Every Markdown and HTML document under `~/docs` must carry the required front matter fields (`type` through `status`) before it lands on `main`; the docs-site schema validates the custom fields and the HTML verifier checks the equivalent comment block. The source Markdown H1 remains for contract validation, while the Starlight Markdown processor removes it from rendered body output because the custom `PageTitle` component owns the visible H1.
 
 ## 3. Document shape and navigation
 
-- Provide one document title: exactly one plain H1 in Markdown; exactly one visible H1 in HTML, plus the HTML `<title>` element. The visible titles must match the metadata `title`.
+- Provide one document title: exactly one plain H1 in Markdown and exactly one visible H1 in HTML, plus the HTML `<title>` element. All visible titles must match the metadata `title`.
 - Number every H2, H3, and H4 hierarchically (`## 1.`, `### 1.1.`, `#### 1.1.1.`). Do not skip a level or reset numbering inside a document.
 - Put a complete heading-derived TOC immediately after the Markdown H1. In HTML, provide an equivalent semantic `<nav aria-label="Table of contents">` near the document introduction. Include every H2-H4 heading exactly once, in document order, with nested links.
 - Every documentation folder follows its repository path/navigation contract: its structural contents page lists every direct child (including non-Markdown assets) with relative links, and its semantic index links relevant topics to headings. Link a child folder through that folder's contents page.
@@ -174,13 +188,17 @@ flowchart TD
 
 An explicit, discoverable legacy or R&D override may relax presentation only: for example, emoji, decorative layout, collapsible styling, or renderer-specific TOC presentation. It may not remove or weaken metadata, document identity, heading/link safety, stable IDs, path safety, asset coverage, keyboard access, alt text/text summaries, contrast, or Mermaid readability minimums. Keep the override local to the smallest tree and state which presentation choice it changes.
 
+### 6.1. Structural exemptions (cross-reference)
+
+Structural exemptions for asset and working directories are defined in §6.1 of `s-a-c-doc-tree-prefixes`. When a repository declares those exemptions, this skill follows the same table: asset directories are fully exempt from the Markdown metadata contract; working directories retain the frontmatter requirement but are exempt from document shape and heading rules. Mermaid `.mmd` sources in any directory still follow §5.
+
 ## 7. Actionable examples
 
 - Before adding a document, create the required metadata fields (`type` through `status`), one H1, numbered H2-H4 sections, and a TOC containing every section.
 - Before adding an image or Mermaid diagram, add its alt text or summary, verify contrast, and add the asset to the containing folder's contents page.
 - Before renaming a heading or HTML `id`, search its inbound links and update them in the same change; preserve the old identity when compatibility is required.
 
-## See Also
+## 8. See Also
 
 - `s-a-c-doc-tree-prefixes` — the path-prefix grammar this skill assumes.
 - `s-a-c-software-doc-lifecycle` — decision flow that fills these documents.

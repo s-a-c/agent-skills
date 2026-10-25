@@ -1,6 +1,14 @@
 ---
-name: s-a-c-software-doc-lifecycle
+title: Software Documentation Lifecycle
 description: Turn research or an idea into a decision-ready, traceable path to a buildable and operable software system. Use when software documentation turns research/idea into a system, or materially plans its evolution.
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+type: reference
+tags: [agents, documentation]
+created: 2026-08-09
+updated: 2026-08-09
+name: s-a-c-software-doc-lifecycle
 ---
 
 # Software Documentation Lifecycle
@@ -10,6 +18,7 @@ description: Turn research or an idea into a decision-ready, traceable path to a
 ## 1. Start from the current state
 
 - Before proposing, planning, or adding software documentation, inspect the existing documentation, research, issue tracker, domain language, and relevant source code. Identify the latest supported decision in each area before creating another document.
+- Every new or materially revised document uses the shared eight-field metadata contract, YAML front matter for Markdown or an equivalent HTML comment, and a single H1/title identity before lifecycle content is reviewed.
 - State the effort's current lifecycle position and the next unresolved decision. Preserve useful material; synthesize or link it instead of duplicating it.
 - The documentation-tree-prefixes skill remains authoritative for documentation-tree prefixes, navigation, Markdown presentation, links, visuals, and migration. This rule governs lifecycle content and decision flow only.
 
