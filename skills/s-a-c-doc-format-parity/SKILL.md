@@ -122,6 +122,7 @@ This is not just a convention — it is a **build requirement**. A frontmatter-a
 - Respect the repository's path-prefix grammar. In a `docs/` tree governed by a path-prefix rule, use unique path-derived prefixes, reserved contents/index pages, and valid sibling tails; do not create a parallel prefix scheme.
 - Use relative links for repository-local documents and assets. Link to the actual target, preserve the target's stable path, and do not link to temporary, generated, or ignored files.
 - Markdown TOC links use the target renderer's stable heading fragments. Keep heading text and punctuation stable; do not rely on an accidental slug that changes when formatting changes.
+- Heading text must not contain emoji variation selectors (VS15/VS16, `U+FE0E`/`U+FE0F`); use the single-codepoint emoji form. The selector survives some anchor sluggers and not others, so a multi-codepoint emoji gives the same heading different ids per renderer — see `s-a-c-doc-tree-prefixes` §5 for the divergence details. `scripts/documentation-structure check` rejects them and `normalize` strips them.
 - HTML H2-H4 headings that are navigation targets have explicit, unique, lowercase kebab-case `id` values. Update all inbound links when an intentional identity change is unavoidable.
 - List direct non-Markdown assets in folder contents navigation. Give every referenced asset a meaningful name and keep its relative path stable.
 

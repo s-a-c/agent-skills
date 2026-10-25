@@ -105,6 +105,8 @@ All diagrams, images, and rendered visuals must meet WCAG 2.1 AA:
 
 Internal links and TOCs use GitHub-compatible anchors unless the repository documents another renderer. Generate anchors by lowercasing, replacing spaces with hyphens, and removing punctuation, including emoji. Keep emoji in the visible heading and TOC label, but omit it from the generated fragment; always verify the rendered link.
 
+Headings must not contain emoji variation selectors (VS15/VS16, `U+FE0E`/`U+FE0F`); use the single-codepoint emoji form. Two-codepoint emoji (`⚙️` = `U+2699 U+FE0F`) break the anchor rule above: GitHub's slugger keeps the invisible selector in the id while dropping the symbol it modifies (`## 2. ☑️ Checklist` → id `2-️-checklist`), while the docs-site `PageTitle` slug strips the selector — the same heading then carries different anchors per renderer, and hand-derived fragments diverge. Prefer emoji with default emoji presentation (`🚀`, `🧭`, `📄`), or keep the bare symbol (`⚙`, `⚠`; some renderers show it monochrome). `scripts/documentation-structure check` rejects variation selectors in headings, and its `normalize` command strips them and rewrites TOC fragments.
+
 When fixing a broken link, create or correct the missing content when possible. Delete the link only when its target is obsolete or intentionally removed.
 
 ## 6. Overrides
