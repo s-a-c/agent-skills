@@ -34,6 +34,7 @@ See the [`skills` CLI docs](https://github.com/vercel-labs/skills) for global
 | `s-a-c-doc-tree-prefixes` | structuring a `docs/` tree with path-derived prefixes | ✓ |
 | `s-a-c-doc-format-parity` | keeping Markdown/HTML documentation in parity | ✓ |
 | `s-a-c-software-doc-lifecycle` | turning research or an idea into a software system | ✓ |
+| `s-a-c-docs-to-docs-site` | publishing a project `docs/` tree into a namespaced docs-site | |
 | `s-a-c-git-write-gate` | before any git write operation | ✓ |
 | `s-a-c-scratch-script-safety` | running scratch scripts safely inside the workspace | ✓ |
 | `s-a-c-governed-memory-substrate` | using a governed memory substrate for recall (parameterized) | |
@@ -77,6 +78,23 @@ skills/<gate>/rules/<gate>.md     # gate skills only: always-on rule wrapper
 This repo is a **portable export**: skills are generalized to be
 workspace-agnostic. Workspace-specific values in `s-a-c-governed-memory-substrate`
 are placeholders to fill in on install.
+
+## Syncing from the workspace
+
+The canonical copies of these skills live in the author's workspace
+(`~/.config/agents/skills`, chezmoi-managed); this repo publishes them.
+
+- Every `SKILL.md` and helper file is **byte-identical** to the workspace copy.
+- The `rules/` wrappers are two deliberate editions of one function: this
+  repo's wrapper is the portable installer edition (the `cp`/`curl`
+  one-liners above), the workspace's rule is the runtime routing stub. Both
+  must route to the same skill; they are compared by route-target, never by
+  bytes.
+- The workspace verifier `scripts/agent-skills-parity` (home repository)
+  enforces this: `check` reports drift between the workspace and the clone at
+  `~/Projects/agent-skills`; `sync [--apply]` copies workspace skills into the
+  clone without touching the repo-side wrappers, after which the change is
+  committed and pushed here.
 
 ## License
 
