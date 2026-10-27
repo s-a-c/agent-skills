@@ -38,6 +38,7 @@ See the [`skills` CLI docs](https://github.com/vercel-labs/skills) for global
 | `s-a-c-git-write-gate` | before any git write operation | ✓ |
 | `s-a-c-scratch-script-safety` | running scratch scripts safely inside the workspace | ✓ |
 | `s-a-c-governed-memory-substrate` | using a governed memory substrate for recall (parameterized) | |
+| `s-a-c-proton-pass-cli` | retrieving or managing Proton Pass credentials and vaults via `pass-cli` | |
 
 ## Always-on wrappers (gate skills)
 
@@ -76,8 +77,9 @@ skills/<gate>/rules/<gate>.md     # gate skills only: always-on rule wrapper
 ```
 
 This repo is a **portable export**: skills are generalized to be
-workspace-agnostic. Workspace-specific values in `s-a-c-governed-memory-substrate`
-are placeholders to fill in on install.
+workspace-agnostic. Workspace-specific values (for example in
+`s-a-c-governed-memory-substrate` and `s-a-c-proton-pass-cli`) are `<PLACEHOLDER: …>`
+markers to fill in on install.
 
 ## Syncing from the workspace
 
